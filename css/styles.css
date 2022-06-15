@@ -56,8 +56,8 @@ body{
 .styled-table{
   border-collapse: collapse;
   border: 1px solid #112D32;
-  margin: 25px 0;
-  min-width: 500px;
+  margin: 25px;
+  /* min-width: 500px; */
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .styled-table thead th{
@@ -189,13 +189,13 @@ body{
   margin: 10px;
   
 }
-.content-child-header{
+.content-child-header, .content-child-right{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
 }
-.content-child-right{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+#table_id_pusculite{
+  flex-direction: column;
+  min-width: 800px;
+  justify-content: left;
 }

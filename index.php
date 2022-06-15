@@ -22,10 +22,10 @@
             <table id ='table_id_venit' class="styled-table" >
             <table id ='table_id_cheltuieli' class="styled-table" > 
           </div>
-          <div class="table_for_pusculite">
-            <table id ='table_id_pusculite' class="styled-table" > 
-          </div>
         </div>
+        <div>
+            <table id ='table_id_pusculite'  id ='table_id_pusculite' class="styled-table" > 
+          </div>
       </div>
       <div class='model' id='model'></div>
     </div>

@@ -32,6 +32,16 @@ function submitSuccessRecieveData(response) {
   if(document.getElementById("table_id_cheltuieli")){
     document.getElementById("cheltuieli_id").innerText = 'Cheltuieli';
   }
+  const serializerPusculite = transformResponseToTableData(response["records_pusculite"], {
+    "id" : "Nr de ordine",
+    "pusculita_name" : "Pusculita",
+    "suma_alocata" : "Suma Alocata",
+    "suma_folosita" : "Suma Folosita",
+    "diferenta" : "Diferenta",
+    "suma_luna_anterioara" : "Suma Anterioara Folosita"
+  })
+  let interval = setTimeout(constructTable("table_id_pusculite", serializerPusculite), 100000);
+  clearTimeout(interval);
 }
 function submitFail(response) {
   openMessage("Fail", `Au aparut urmatoarele erori: ${response['Error']}`, "close", "noPage");

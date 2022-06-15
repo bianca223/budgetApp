@@ -165,7 +165,7 @@ function constructTable(id, data) {
     return ;
   }
   let tableData = `
-    <table class = 'table table-border cell-border subcompact' data-role="table">
+    <table class = 'table' data-role="table">
       ${getHead(data['header'])}
       ${getBody(data['payload'])}
     </table>

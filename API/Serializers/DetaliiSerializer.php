@@ -16,7 +16,21 @@
     }
     return $suma;
   }
-  
+  function getSumPreviousMonth($id, $allRecords){
+    $suma = 0;
+    if(intval(date('d')) >= 10){
+      $date_month = intval(date('n')) - 1;
+    } else {
+      $date_month = intval(date('n')) - 2;
+    }
+    foreach($allRecords as $all){
+      $date_record = intval(date('n', strtotime($all->expected_date)));
+      if($all->id_pusculite == $id && $date_record <= $date_month){
+        $suma += $all->suma;
+      }
+    }
+    return $suma;
+  }
   class DetaliiSerializer {
     static function each($conn, $objects) {
       $response = array();
@@ -52,18 +66,22 @@
       $response = array();
       foreach($objects as $obj) {
         $id = $obj->id;
+        $id_user = $obj->id_user;
+        $allRecords = Detalii::where($conn, array(
+          "id_users" => $id_user
+        ))->fetch();
         $suma_alocata = getSumAlocata($sumaVenit, $obj->procentaj);
         $suma_folosita = getSumFolosita($id, $detalii);
-        // $suma_luna_anterioara = getSumPreviousMonth();
+        $suma_luna_anterioara = getSumPreviousMonth($id, $allRecords);
         array_push($response, array(
           'id' => $id,
-          'pusculita_name' => $obj->id_pusculite,
-          'id_users' => $obj->id_users,
+          'pusculita_name' => $obj->denumire,
+          'id_users' => $id_user,
           'suma_alocata' => $suma_alocata,
-          'suma_folosita' => $obj->tip,
-          'diferenta' => $obj->detalii,
-          'suma_luna_anterioara' => date("d-m-y", strtotime($obj->expected_date)),
-          'more_details' => "<div class='button-detalii' onclick='geMoreDetailds($obj->id)'>Details</div>",
+          'suma_folosita' => $suma_folosita,
+          'diferenta' => $suma_alocata - $suma_folosita,
+          'suma_luna_anterioara' => $suma_luna_anterioara,
+          'more_details' => "<div class='button-detalii' onclick='geMoreDetailds($id)'>Details</div>",
         ));
       }
       return $response;

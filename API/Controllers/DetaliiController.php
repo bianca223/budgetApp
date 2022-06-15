@@ -88,7 +88,7 @@
         mysqli_select_db($conn, "budget_app");
         $conn->autocommit(FALSE);
         $luna = intval(date("n"));
-        $allRecords = Detalii::all($conn)->whereRaw("YEAR(expected_date) = ? AND MONTH(expected_date) = ? AND id_users = ?", [intval(date("Y")), $luna, $params['id_users']])->fetch();
+        $allRecords = Detalii::all($conn)->whereRaw("YEAR(expected_date) = ? AND (MONTH(expected_date) = ? OR (MONTH(expected_date) <= ? AND DAY(expected_date) >= ?)) AND id_users = ?", [intval(date("Y")), $luna, $luna-1, 10, $params['id_users']])->fetch();
         if(!$allRecords) {
           $conn->rollback();
           return array(
@@ -108,9 +108,9 @@
             $sumaCheltuieli += $all->suma;
           }
         }
-        $obj_pusculite = imap(Pusculite::where($conn, array(
+        $obj_pusculite = Pusculite::where($conn, array(
           "id_user" => $params['id_users']
-        ))->fetch(), "id");
+        ))->fetch();
         $diferenta = $sumaCheltuieli - $sumaVenit;
         if($diferenta > 0 ){
           $status = "Luna asta te-ai intins cu $diferenta";
@@ -122,7 +122,7 @@
         }
         $return = array(
           "records_venit" => DetaliiSerializer::each($conn, $records_venit),
-          "records_cheltuieli" => DetaliiSerializer::eachCheltuieli($conn, $records_cheltuieli, $obj_pusculite),
+          "records_cheltuieli" => DetaliiSerializer::eachCheltuieli($conn, $records_cheltuieli, imap($obj_pusculite, "id")),
           "records_pusculite" => DetaliiSerializer::eachPusculite($conn, $obj_pusculite, $sumaVenit, $allRecords),
           "luna" => $luna,
           "status" => $status
